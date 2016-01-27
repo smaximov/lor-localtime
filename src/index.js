@@ -1,11 +1,3 @@
-// ==UserScript==
-// @name        Local Time
-// @namespace   https://maximov.space/userscripts
-// @include     https://www.linux.org.ru/*
-// @version     0.1.0
-// @grant       none
-// ==/UserScript==
-
 let zeroPad = (num, places) => {
   let numString = num.toString()
   let zero = places - numString.length + 1

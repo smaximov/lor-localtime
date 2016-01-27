@@ -2,6 +2,7 @@
 var gulp = require('gulp');
 var babel = require('gulp-babel');
 var webpack = require('gulp-webpack');
+var concat = require('gulp-concat');
 
 gulp.task('build', function () {
     return gulp.src('src/**/*.js')
@@ -17,7 +18,13 @@ gulp.task('pack', ['build'], function () {
     };
     return gulp.src('build/index.js')
 	.pipe(webpack(webpackConfig))
+	.pipe(gulp.dest('build'));
+});
+
+gulp.task('manifest', ['pack'], function () {
+    return gulp.src(['manifest', 'build/localtime.js'])
+	.pipe(concat('localtime.js'))
 	.pipe(gulp.dest('.'));
 });
 
-gulp.task('default', ['pack']);
+gulp.task('default', ['manifest']);

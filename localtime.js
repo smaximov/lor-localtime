@@ -1,3 +1,10 @@
+// ==UserScript==
+// @name        Local Time
+// @namespace   https://maximov.space/userscripts
+// @include     https://www.linux.org.ru/*
+// @version     0.1.0
+// @grant       none
+// ==/UserScript==
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -43,14 +50,6 @@
 /******/ ([
 /* 0 */
 /***/ function(module, exports) {
-
-	// ==UserScript==
-	// @name        Local Time
-	// @namespace   https://maximov.space/userscripts
-	// @include     https://www.linux.org.ru/*
-	// @version     0.1.0
-	// @grant       none
-	// ==/UserScript==
 
 	var zeroPad = function zeroPad(num, places) {
 	  var numString = num.toString();
