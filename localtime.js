@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name        Local Time
+// @name        Local time for LOR
 // @namespace   https://maximov.space/userscripts
 // @include     https://www.linux.org.ru/*
-// @version     0.1.0
+// @version     0.2.0
 // @grant       none
 // ==/UserScript==
 /******/ (function(modules) { // webpackBootstrap

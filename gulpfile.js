@@ -1,8 +1,11 @@
 /* eslint-env node */
 var gulp = require('gulp');
 var babel = require('gulp-babel');
-var webpack = require('gulp-webpack');
+var webpack = require('webpack-stream');
 var concat = require('gulp-concat');
+var template = require('gulp-template');
+
+var pkg = require('./package.json');
 
 gulp.task('build', function () {
     return gulp.src('src/**/*.js')
@@ -21,10 +24,20 @@ gulp.task('pack', ['build'], function () {
 	.pipe(gulp.dest('build'));
 });
 
-gulp.task('manifest', ['pack'], function () {
-    return gulp.src(['manifest', 'build/localtime.js'])
+gulp.task('manifest', function () {
+    var bindings = {
+	name: pkg.description,
+	version: pkg.version
+    };
+    return gulp.src('src/manifest')
+	.pipe(template(bindings))
+	.pipe(gulp.dest('build'));
+});
+
+gulp.task('concat', ['manifest', 'pack'], function () {
+    return gulp.src(['build/manifest', 'build/localtime.js'])
 	.pipe(concat('localtime.js'))
 	.pipe(gulp.dest('.'));
 });
 
-gulp.task('default', ['manifest']);
+gulp.task('default', ['concat']);
