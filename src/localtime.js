@@ -2,7 +2,7 @@
 // @name        Local Time
 // @namespace   https://maximov.space/userscripts
 // @include     https://www.linux.org.ru/*
-// @version     1
+// @version     0.1.0
 // @grant       none
 // ==/UserScript==
 
@@ -35,7 +35,7 @@ let formatDate = (date, verbose=true) => {
 
   let now = new Date()
 
-  let dateString 
+  let dateString
 
   if (verbose && sameDay(date, now)) {
     dateString = 'сегодня'
@@ -76,7 +76,7 @@ let formatElapsedMinutes = elapsedMinutes => {
 let formatDateTime = (date, verbose=true) => {
   if (verbose) {
     let elapsedMinutes = minutesElapsedSince(date)
-  
+
     if (elapsedMinutes < 60) {
       return formatElapsedMinutes(elapsedMinutes)
     }
@@ -85,9 +85,9 @@ let formatDateTime = (date, verbose=true) => {
   let hour = zeroPad(date.getHours(), 2)
   let minute = zeroPad(date.getMinutes(), 2)
   let seconds = zeroPad(date.getSeconds(), 2)
-  
+
   let dateString = formatDate(date, verbose=verbose)
-  
+
   return `${dateString} ${hour}:${minute}:${seconds}`
 }
 
@@ -127,14 +127,14 @@ let updateTime = (elem, date) => {
   elem.textContent = formatDateTime(date, verbose=true)
 }
 
-let scheduleUpdateDays = (elem, date) => 
+let scheduleUpdateDays = (elem, date) =>
   schedule(updateTime, stopAfter({days: 2}), {hours: 1}, elem, date)
 
-let scheduleUpdateMinutes = (elem, date) => 
+let scheduleUpdateMinutes = (elem, date) =>
   schedule(updateTime, stopAfter({hours: 1}), {seconds: 10}, elem, date)
 
-let timeElapsed = (date, delay) => 
-  (new Date() - date) >= translateDelay(delay)  
+let timeElapsed = (date, delay) =>
+  (new Date() - date) >= translateDelay(delay)
 
 let stopAfter = (delay) =>
   (_elem, date) => timeElapsed(date, delay)
@@ -144,12 +144,12 @@ let localizeTimeElement = (elem) => {
   let date = new Date(time)
   updateTime(elem, date)
   elem.setAttribute('data-tooltip', formatDateTime(date, verbose=false))
-  
+
   if (!timeElapsed(date, {hours: 1})) {
     scheduleUpdateMinutes(elem, date).then(scheduleUpdateDays)
   } else if (!timeElapsed(date, {days: 2})) {
     scheduleUpdateDays(elem, date)
-  }  
+  }
 }
 
 let css = `

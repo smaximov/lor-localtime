@@ -1,0 +1,27 @@
+{
+  "name": "lor-localtime",
+  "version": "0.1.0",
+  "description": "Local time for LOR",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:smaximov/lor-localtime.git"
+  },
+  "keywords": [
+    "userscript",
+    "localtime"
+  ],
+  "author": "smaximov <s.b.maximov@gmail.com>",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/smaximov/lor-localtime/issues"
+  },
+  "homepage": "https://github.com/smaximov/lor-localtime",
+  "devDependencies": {
+    "babel-preset-es2015-without-strict": "0.0.2",
+    "gulp": "^6.1.1",
+    "gulp-babel": "^0.6.6"
+  }
+}
