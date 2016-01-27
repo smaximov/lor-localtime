@@ -9,7 +9,7 @@ var mocha = require('gulp-mocha');
 var pkg = require('./package.json');
 
 gulp.task('build', function () {
-  return gulp.src('src/**/*.js')
+  return gulp.src(['src/**/*.js', '!src/localtime.meta.js'])
     .pipe(babel())
     .pipe(gulp.dest('build'));
 });
@@ -25,18 +25,20 @@ gulp.task('pack', ['build'], function () {
     .pipe(gulp.dest('build'));
 });
 
-gulp.task('manifest', function () {
+gulp.task('meta', function () {
   var bindings = {
     name: pkg.description,
-    version: pkg.version
+    version: pkg.version,
+    updateURL: 'https://raw.githubusercontent.com/smaximov/lor-localtime/master/localtime.meta.js',
+    downloadURL: 'https://raw.githubusercontent.com/smaximov/lor-localtime/master/localtime.js'
   };
-  return gulp.src('src/manifest')
+  return gulp.src('src/localtime.meta.js')
     .pipe(template(bindings))
-    .pipe(gulp.dest('build'));
+    .pipe(gulp.dest('.'));
 });
 
-gulp.task('concat', ['manifest', 'pack'], function () {
-  return gulp.src(['build/manifest', 'build/localtime.js'])
+gulp.task('concat', ['meta', 'pack'], function () {
+  return gulp.src(['localtime.meta.js', 'build/localtime.js'])
     .pipe(concat('localtime.js'))
     .pipe(gulp.dest('.'));
 });
