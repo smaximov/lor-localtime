@@ -17,7 +17,7 @@ Userscript для LOR, устанавливающий местное время.
 
 * Установка
 
-Добавьте [[localtime.user.js]] к вашим пользовательским скриптам.
+Добавьте [[https://raw.githubusercontent.com/smaximov/lor-localtime/master/localtime.user.js][localtime.user.js]] к вашим пользовательским скриптам.
 
 * Лицензия
 
