@@ -17,7 +17,7 @@ gulp.task('build', function () {
 gulp.task('pack', ['build'], function () {
   var webpackConfig = {
     output: {
-      filename: 'localtime.js'
+      filename: 'localtime.user.js'
     }
   };
   return gulp.src('build/index.js')
@@ -30,7 +30,7 @@ gulp.task('meta', function () {
     name: pkg.description,
     version: pkg.version,
     updateURL: 'https://raw.githubusercontent.com/smaximov/lor-localtime/master/localtime.meta.js',
-    downloadURL: 'https://raw.githubusercontent.com/smaximov/lor-localtime/master/localtime.js'
+    downloadURL: 'https://raw.githubusercontent.com/smaximov/lor-localtime/master/localtime.user.js'
   };
   return gulp.src('src/localtime.meta.js')
     .pipe(template(bindings))
@@ -38,8 +38,8 @@ gulp.task('meta', function () {
 });
 
 gulp.task('concat', ['meta', 'pack'], function () {
-  return gulp.src(['localtime.meta.js', 'build/localtime.js'])
-    .pipe(concat('localtime.js'))
+  return gulp.src(['localtime.meta.js', 'build/localtime.user.js'])
+    .pipe(concat('localtime.user.js'))
     .pipe(gulp.dest('.'));
 });
 
