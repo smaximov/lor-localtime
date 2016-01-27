@@ -3,12 +3,19 @@ import { getYear, getMonth, getDay } from './date'
 import { yesterday, sameDay } from './date'
 import { minutesElapsedSince } from './date'
 
-const formatDate = (date, verbose=true) => {
-  let year = getYear(date).toString()
-  let month = zeroPad(getMonth(date), 2)
-  let day = zeroPad(getDay(date), 2)
+export const FORMAT = {
+  EXACT: 'EXACT',
+  ELAPSED: 'ELAPSED'
+}
 
-  let now = new Date()
+export const displayDate = (date, format) => {
+  const verbose = format === FORMAT.ELAPSED
+
+  const year = getYear(date).toString()
+  const month = zeroPad(getMonth(date), 2)
+  const day = zeroPad(getDay(date), 2)
+
+  const now = new Date()
 
   let dateString
 
@@ -24,35 +31,37 @@ const formatDate = (date, verbose=true) => {
 }
 
 const pluralizeMinutes = minutes => {
-  let lastDigit = minutes % 10
+  const lastDigit = minutes % 10
 
   if ((minutes >= 10 && minutes <= 20) || lastDigit == 0 || lastDigit >= 5) return "минут"
   if (lastDigit == 1) return "минута"
   return "минуты"
 }
 
-const formatElapsedMinutes = elapsedMinutes => {
+export const displayMinutes = elapsedMinutes => {
   if (elapsedMinutes === 1) {
     return 'минуту назад'
   }
-  let minutesString = pluralizeMinutes(elapsedMinutes)
+  const minutesString = pluralizeMinutes(elapsedMinutes)
   return `${elapsedMinutes} ${minutesString} назад`
 }
 
-export const formatDateTime = (date, verbose=true) => {
+export const display = (date, format) => {
+  const verbose = format === FORMAT.ELAPSED
+
   if (verbose) {
-    let elapsedMinutes = minutesElapsedSince(date)
+    const elapsedMinutes = minutesElapsedSince(date)
 
     if (elapsedMinutes < 60) {
-      return formatElapsedMinutes(elapsedMinutes)
+      return displayMinutes(elapsedMinutes)
     }
   }
 
-  let hour = zeroPad(date.getHours(), 2)
-  let minute = zeroPad(date.getMinutes(), 2)
-  let seconds = zeroPad(date.getSeconds(), 2)
+  const hour = zeroPad(date.getHours(), 2)
+  const minute = zeroPad(date.getMinutes(), 2)
+  const seconds = zeroPad(date.getSeconds(), 2)
 
-  let dateString = formatDate(date, verbose=verbose)
+  const dateString = displayDate(date, format)
 
   return `${dateString} ${hour}:${minute}:${seconds}`
 }

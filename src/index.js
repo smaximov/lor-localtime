@@ -1,52 +1,29 @@
-import { translateDelay } from './delay'
-import { formatDateTime } from './date-format'
+import { elapsed } from './date'
+import { display, FORMAT } from './date-format'
+import { after, schedule } from './schedule'
 
-let schedule = (action, stopCondition, delay, ...args) => {
-  let scheduler = {
-    then(action) {
-      this.after = action
-    }
-  }
-  scheduler.interval = setInterval(() => {
-    action(...args)
-    if (stopCondition(...args)) {
-      clearInterval(scheduler.interval)
-      if (scheduler.after) scheduler.after(...args)
-    }
-  }, translateDelay(delay))
-  return scheduler
-}
+const setLocalTime = (elem) => {
+  const time = elem.dateTime
+  const date = new Date(time)
 
-let updateTime = (elem, date) => {
-  elem.textContent = formatDateTime(date, true)
-}
+  const update = (date) => elem.textContent = display(date, FORMAT.ELAPSED)
 
-let scheduleUpdateDays = (elem, date) =>
-    schedule(updateTime, stopAfter({days: 2}), {hours: 1}, elem, date)
+  const scheduleUpdateDays = () =>
+	schedule(update, {stop: after({days: 2}), every: {hours: 1}}, date)
+  const scheduleUpdateMinutes = () =>
+	schedule(update, {stop: after({hours: 1}), every: {seconds: 10}}, date)
 
-let scheduleUpdateMinutes = (elem, date) =>
-    schedule(updateTime, stopAfter({hours: 1}), {seconds: 10}, elem, date)
+  update(date)
+  elem.setAttribute('data-tooltip', display(date, FORMAT.EXACT))
 
-let timeElapsed = (date, delay) =>
-    (new Date() - date) >= translateDelay(delay)
-
-let stopAfter = (delay) =>
-    (_elem, date) => timeElapsed(date, delay)
-
-let localizeTimeElement = (elem) => {
-  let time = elem.dateTime
-  let date = new Date(time)
-  updateTime(elem, date)
-  elem.setAttribute('data-tooltip', formatDateTime(date, false))
-
-  if (!timeElapsed(date, {hours: 1})) {
-    scheduleUpdateMinutes(elem, date).then(scheduleUpdateDays)
-  } else if (!timeElapsed(date, {days: 2})) {
-    scheduleUpdateDays(elem, date)
+  if (!elapsed(date, {hours: 1})) {
+    scheduleUpdateMinutes().then(scheduleUpdateDays)
+  } else if (!elapsed(date, {days: 2})) {
+    scheduleUpdateDays();
   }
 }
 
-let css = `
+const css = `
 time[data-tooltip] {
   border-bottom: 2px dotted grey;
   cursor: pointer;
@@ -75,11 +52,11 @@ time[data-tooltip]:hover:after {
 }
 `
 
-let style = document.createElement('style')
+const style = document.createElement('style')
 style.type = 'text/css'
 style.innerHTML = css
 document.body.appendChild(style)
 
 for (let time of document.querySelectorAll('time')) {
-  localizeTimeElement(time)
+  setLocalTime(time)
 }
