@@ -49,63 +49,34 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	var zeroPad = function zeroPad(num, places) {
-	  var numString = num.toString();
-	  var zero = places - numString.length + 1;
-	  return Array(+(zero > 0 && zero)).join('0') + num;
-	};
+	var _delay = __webpack_require__(1);
 
-	var getYear = function getYear(date) {
-	  return date.getFullYear();
-	};
-	var getMonth = function getMonth(date) {
-	  return date.getMonth() + 1;
-	};
-	var getDay = function getDay(date) {
-	  return date.getDate();
-	};
+	var _util = __webpack_require__(2);
 
-	var yesterday = function yesterday(date) {
-	  var newDate = new Date(date);
-	  newDate.setDate(date.getDate() - 1);
-	  return newDate;
-	};
-
-	var sameDay = function sameDay(date1, date2) {
-	  return getYear(date1) === getYear(date2) && getMonth(date1) === getMonth(date2) && getDay(date1) === getDay(date2);
-	};
+	var _date = __webpack_require__(3);
 
 	var formatDate = function formatDate(date) {
 	  var verbose = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 
-	  var year = getYear(date).toString();
-	  var month = zeroPad(getMonth(date), 2);
-	  var day = zeroPad(getDay(date), 2);
+	  var year = (0, _date.getYear)(date).toString();
+	  var month = (0, _util.zeroPad)((0, _date.getMonth)(date), 2);
+	  var day = (0, _util.zeroPad)((0, _date.getDay)(date), 2);
 
 	  var now = new Date();
 
 	  var dateString = undefined;
 
-	  if (verbose && sameDay(date, now)) {
+	  if (verbose && (0, _date.sameDay)(date, now)) {
 	    dateString = 'сегодня';
-	  } else if (verbose && sameDay(date, yesterday(now))) {
+	  } else if (verbose && (0, _date.sameDay)(date, (0, _date.yesterday)(now))) {
 	    dateString = 'вчера';
 	  } else {
 	    dateString = day + '.' + month + '.' + year;
 	  }
 
 	  return dateString;
-	};
-
-	var MILLIS_PER_MINUTE = 1000 * 60;
-
-	var minutesElapsedSince = function minutesElapsedSince(date) {
-	  var now = new Date();
-	  var minutesDiff = (now - date) / MILLIS_PER_MINUTE;
-	  var roundingFunction = minutesDiff < 1 ? Math.ceil : Math.floor;
-	  return roundingFunction(minutesDiff);
 	};
 
 	var pluralizeMinutes = function pluralizeMinutes(minutes) {
@@ -128,58 +99,20 @@
 	  var verbose = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 
 	  if (verbose) {
-	    var elapsedMinutes = minutesElapsedSince(date);
+	    var elapsedMinutes = (0, _date.minutesElapsedSince)(date);
 
 	    if (elapsedMinutes < 60) {
 	      return formatElapsedMinutes(elapsedMinutes);
 	    }
 	  }
 
-	  var hour = zeroPad(date.getHours(), 2);
-	  var minute = zeroPad(date.getMinutes(), 2);
-	  var seconds = zeroPad(date.getSeconds(), 2);
+	  var hour = (0, _util.zeroPad)(date.getHours(), 2);
+	  var minute = (0, _util.zeroPad)(date.getMinutes(), 2);
+	  var seconds = (0, _util.zeroPad)(date.getSeconds(), 2);
 
 	  var dateString = formatDate(date, verbose = verbose);
 
 	  return dateString + ' ' + hour + ':' + minute + ':' + seconds;
-	};
-
-	var translateDelay = function translateDelay(delay) {
-	  var FACTORS = {
-	    seconds: 1000,
-	    minutes: 1000 * 60,
-	    hours: 1000 * 60 * 60,
-	    days: 1000 * 60 * 60 * 24
-	  };
-	  var units = Object.keys(FACTORS);
-	  var translated = 0;
-	  var _iteratorNormalCompletion = true;
-	  var _didIteratorError = false;
-	  var _iteratorError = undefined;
-
-	  try {
-	    for (var _iterator = units[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	      var unit = _step.value;
-
-	      var value = delay[unit] || 0;
-	      translated += value * FACTORS[unit];
-	    }
-	  } catch (err) {
-	    _didIteratorError = true;
-	    _iteratorError = err;
-	  } finally {
-	    try {
-	      if (!_iteratorNormalCompletion && _iterator.return) {
-	        _iterator.return();
-	      }
-	    } finally {
-	      if (_didIteratorError) {
-	        throw _iteratorError;
-	      }
-	    }
-	  }
-
-	  return translated;
 	};
 
 	var schedule = function schedule(action, stopCondition, delay) {
@@ -198,12 +131,12 @@
 	      clearInterval(scheduler.interval);
 	      if (scheduler.after) scheduler.after.apply(scheduler, args);
 	    }
-	  }, translateDelay(delay));
+	  }, (0, _delay.translateDelay)(delay));
 	  return scheduler;
 	};
 
 	var updateTime = function updateTime(elem, date) {
-	  elem.textContent = formatDateTime(date, verbose = true);
+	  elem.textContent = formatDateTime(date, true);
 	};
 
 	var scheduleUpdateDays = function scheduleUpdateDays(elem, date) {
@@ -215,7 +148,7 @@
 	};
 
 	var timeElapsed = function timeElapsed(date, delay) {
-	  return new Date() - date >= translateDelay(delay);
+	  return new Date() - date >= (0, _delay.translateDelay)(delay);
 	};
 
 	var stopAfter = function stopAfter(delay) {
@@ -228,7 +161,7 @@
 	  var time = elem.dateTime;
 	  var date = new Date(time);
 	  updateTime(elem, date);
-	  elem.setAttribute('data-tooltip', formatDateTime(date, verbose = false));
+	  elem.setAttribute('data-tooltip', formatDateTime(date, false));
 
 	  if (!timeElapsed(date, { hours: 1 })) {
 	    scheduleUpdateMinutes(elem, date).then(scheduleUpdateDays);
@@ -244,30 +177,127 @@
 	style.innerHTML = css;
 	document.body.appendChild(style);
 
-	var _iteratorNormalCompletion2 = true;
-	var _didIteratorError2 = false;
-	var _iteratorError2 = undefined;
+	var _iteratorNormalCompletion = true;
+	var _didIteratorError = false;
+	var _iteratorError = undefined;
 
 	try {
-	  for (var _iterator2 = document.querySelectorAll('time')[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	    var time = _step2.value;
+	  for (var _iterator = document.querySelectorAll('time')[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	    var time = _step.value;
 
 	    localizeTimeElement(time);
 	  }
 	} catch (err) {
-	  _didIteratorError2 = true;
-	  _iteratorError2 = err;
+	  _didIteratorError = true;
+	  _iteratorError = err;
 	} finally {
 	  try {
-	    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-	      _iterator2.return();
+	    if (!_iteratorNormalCompletion && _iterator.return) {
+	      _iterator.return();
 	    }
 	  } finally {
-	    if (_didIteratorError2) {
-	      throw _iteratorError2;
+	    if (_didIteratorError) {
+	      throw _iteratorError;
 	    }
 	  }
 	}
+
+/***/ },
+/* 1 */
+/***/ function(module, exports) {
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var FACTORS = exports.FACTORS = {
+	    seconds: 1000,
+	    minutes: 1000 * 60,
+	    hours: 1000 * 60 * 60,
+	    days: 1000 * 60 * 60 * 24
+	};
+	var units = Object.keys(FACTORS);
+
+	var translateDelay = exports.translateDelay = function translateDelay(delay) {
+	    var translated = 0;
+	    var _iteratorNormalCompletion = true;
+	    var _didIteratorError = false;
+	    var _iteratorError = undefined;
+
+	    try {
+	        for (var _iterator = units[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	            var unit = _step.value;
+
+	            var value = delay[unit] || 0;
+	            translated += value * FACTORS[unit];
+	        }
+	    } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	    } finally {
+	        try {
+	            if (!_iteratorNormalCompletion && _iterator.return) {
+	                _iterator.return();
+	            }
+	        } finally {
+	            if (_didIteratorError) {
+	                throw _iteratorError;
+	            }
+	        }
+	    }
+
+	    return translated;
+	};
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var zeroPad = exports.zeroPad = function zeroPad(num, places) {
+	  var numString = num.toString();
+	  var zero = places - numString.length + 1;
+	  return Array(+(zero > 0 && zero)).join('0') + num;
+	};
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.minutesElapsedSince = exports.sameDay = exports.yesterday = exports.getDay = exports.getMonth = exports.getYear = undefined;
+
+	var _delay = __webpack_require__(1);
+
+	var getYear = exports.getYear = function getYear(date) {
+	  return date.getFullYear();
+	};
+	var getMonth = exports.getMonth = function getMonth(date) {
+	  return date.getMonth() + 1;
+	};
+	var getDay = exports.getDay = function getDay(date) {
+	  return date.getDate();
+	};
+
+	var yesterday = exports.yesterday = function yesterday(date) {
+	  var newDate = new Date(date);
+	  newDate.setDate(date.getDate() - 1);
+	  return newDate;
+	};
+
+	var sameDay = exports.sameDay = function sameDay(date1, date2) {
+	  return getYear(date1) === getYear(date2) && getMonth(date1) === getMonth(date2) && getDay(date1) === getDay(date2);
+	};
+
+	var minutesElapsedSince = exports.minutesElapsedSince = function minutesElapsedSince(date) {
+	  var now = new Date();
+	  var minutesDiff = (now - date) / _delay.FACTORS.minutes;
+	  var roundingFunction = minutesDiff < 1 ? Math.ceil : Math.floor;
+	  return roundingFunction(minutesDiff);
+	};
 
 /***/ }
 /******/ ]);
