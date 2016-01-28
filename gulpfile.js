@@ -8,13 +8,13 @@ var mocha = require('gulp-mocha');
 
 var pkg = require('./package.json');
 
-gulp.task('build', function () {
+gulp.task('build', () => {
   return gulp.src(['src/**/*.js', '!src/localtime.meta.js'])
     .pipe(babel())
     .pipe(gulp.dest('build'));
 });
 
-gulp.task('pack', ['build'], function () {
+gulp.task('pack', ['build'], () => {
   const webpackConfig = {
     output: {
       filename: 'localtime.user.js'
@@ -25,7 +25,7 @@ gulp.task('pack', ['build'], function () {
     .pipe(gulp.dest('build'));
 });
 
-gulp.task('meta', function () {
+gulp.task('meta', () => {
   const bindings = {
     name: pkg.description,
     version: pkg.version,
@@ -37,13 +37,13 @@ gulp.task('meta', function () {
     .pipe(gulp.dest('.'));
 });
 
-gulp.task('concat', ['meta', 'pack'], function () {
+gulp.task('concat', ['meta', 'pack'], () => {
   return gulp.src(['localtime.meta.js', 'build/localtime.user.js'])
     .pipe(concat('localtime.user.js'))
     .pipe(gulp.dest('.'));
 });
 
-gulp.task('test', ['build'], function () {
+gulp.task('test', ['build'], () => {
   const mochaConfig = {
     require: ['./test/helper']
   };
