@@ -1,11 +1,10 @@
 /* eslint-env mocha, node */
+/* global expect */
 
 'use strict';
 
 var schedule = require('../build/schedule').schedule;
 var after = require('../build/schedule').after;
-var chai = require('chai');
-var expect = chai.expect;
 
 describe('schedule', () => {
   const expectError = (e) => expect(e).to.be.an.instanceOf(Error);

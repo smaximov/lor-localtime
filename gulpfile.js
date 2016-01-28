@@ -15,7 +15,7 @@ gulp.task('build', function () {
 });
 
 gulp.task('pack', ['build'], function () {
-  var webpackConfig = {
+  const webpackConfig = {
     output: {
       filename: 'localtime.user.js'
     }
@@ -26,7 +26,7 @@ gulp.task('pack', ['build'], function () {
 });
 
 gulp.task('meta', function () {
-  var bindings = {
+  const bindings = {
     name: pkg.description,
     version: pkg.version,
     updateURL: 'https://raw.githubusercontent.com/smaximov/lor-localtime/master/localtime.meta.js',
@@ -44,8 +44,11 @@ gulp.task('concat', ['meta', 'pack'], function () {
 });
 
 gulp.task('test', ['build'], function () {
+  const mochaConfig = {
+    require: ['./test/helper']
+  };
   return gulp.src('test/**/test_*.js')
-    .pipe(mocha())
+    .pipe(mocha(mochaConfig))
 });
 
 gulp.task('default', ['concat']);
