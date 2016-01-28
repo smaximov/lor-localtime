@@ -3,8 +3,8 @@
 
 'use strict';
 
-var schedule = require('../build/schedule').schedule;
-var after = require('../build/schedule').after;
+const schedule = require('../build/schedule').schedule;
+const after = require('../build/schedule').after;
 
 describe('schedule', () => {
   const expectError = (e) => expect(e).to.be.an.instanceOf(Error);
