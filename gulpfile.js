@@ -5,24 +5,29 @@ var webpack = require('webpack-stream');
 var concat = require('gulp-concat');
 var template = require('gulp-template');
 var mocha = require('gulp-mocha');
+var newer = require('gulp-newer');
 
 var pkg = require('./package.json');
 
 gulp.task('build', () => {
+  const dest = 'build';
   return gulp.src(['src/**/*.js', '!src/localtime.meta.js'])
+    .pipe(newer(dest))
     .pipe(babel())
-    .pipe(gulp.dest('build'));
+    .pipe(gulp.dest(dest));
 });
 
 gulp.task('pack', ['build'], () => {
+  const dest = 'build';
   const webpackConfig = {
     output: {
       filename: 'localtime.user.js'
     }
   };
   return gulp.src('build/index.js')
+    .pipe(newer(`${dest}/${webpackConfig.output.filename}`))
     .pipe(webpack(webpackConfig))
-    .pipe(gulp.dest('build'));
+    .pipe(gulp.dest(dest));
 });
 
 gulp.task('meta', () => {
