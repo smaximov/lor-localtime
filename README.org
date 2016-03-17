@@ -3,8 +3,8 @@
 #+email: s.b.maximov@gmail.com
 #+date: 2016-01-27 Wed
 
-Userscript для LOR, устанавливающий местное время. Работает в Firefox с Greasemonkey,
-работа в других браузерах не проверялась.
+Userscript для LOR, устанавливающий местное время. Работает в Firefox с Greasemonkey, Chromium-based
+с Violent Monkey, работа в других браузерах не проверялась.
 
 * Другие фичи
   + Время устанавливается в следующем формате:
