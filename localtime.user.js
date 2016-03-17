@@ -2,7 +2,7 @@
 // @name        Local time for LOR
 // @namespace   https://maximov.space/userscripts
 // @include     https://www.linux.org.ru/*
-// @version     0.6.0
+// @version     0.6.1
 // @grant       none
 // @updateURL   https://raw.githubusercontent.com/smaximov/lor-localtime/master/localtime.meta.js
 // @downloadURL https://raw.githubusercontent.com/smaximov/lor-localtime/master/localtime.user.js
@@ -61,8 +61,9 @@
 	var _schedule = __webpack_require__(5);
 
 	var setLocalTime = function setLocalTime(elem) {
-	  console.log(elem);
-	  var time = elem.dateTime;
+	  // Chromium-based browsers don't yet recognize HTMLTimeElement,
+	  // so `dateTime` is undefined, then use `getAttribute` instead.
+	  var time = elem.dateTime ? elem.dateTime : elem.getAttribute('datetime');
 	  var date = new Date(time);
 
 	  var update = function update(date) {
