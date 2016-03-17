@@ -25,7 +25,6 @@ gulp.task('pack', ['build'], () => {
     }
   };
   return gulp.src('build/index.js')
-    .pipe(newer(`${dest}/${webpackConfig.output.filename}`))
     .pipe(webpack(webpackConfig))
     .pipe(gulp.dest(dest));
 });
