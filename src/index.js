@@ -3,7 +3,9 @@ import { display, FORMAT } from './date-format'
 import { after, schedule } from './schedule'
 
 const setLocalTime = (elem) => {
-  const time = elem.dateTime
+  // Chromium-based browsers don't yet recognize HTMLTimeElement,
+  // so `dateTime` is undefined, then use `getAttribute` instead.
+  const time = elem.dateTime ? elem.dateTime : elem.getAttribute('datetime')
   const date = new Date(time)
 
   const update = (date) => elem.textContent = display(date, FORMAT.ELAPSED)

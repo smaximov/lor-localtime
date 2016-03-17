@@ -61,6 +61,7 @@
 	var _schedule = __webpack_require__(5);
 
 	var setLocalTime = function setLocalTime(elem) {
+	  console.log(elem);
 	  var time = elem.dateTime;
 	  var date = new Date(time);
 
