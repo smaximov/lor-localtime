@@ -2,7 +2,7 @@
 // @name        Local time for LOR
 // @namespace   https://maximov.space/userscripts
 // @include     https://www.linux.org.ru/*
-// @version     0.6.1
+// @version     0.6.2
 // @grant       none
 // @updateURL   https://raw.githubusercontent.com/smaximov/lor-localtime/master/localtime.meta.js
 // @downloadURL https://raw.githubusercontent.com/smaximov/lor-localtime/master/localtime.user.js
@@ -60,6 +60,12 @@
 
 	var _schedule = __webpack_require__(5);
 
+	var TABULAR_VIEW_RE = /^\/(forum\/\w+|notifications|tracker)\/?$/;
+
+	function shortDates() {
+	  return TABULAR_VIEW_RE.test(window.location.pathname);
+	}
+
 	var setLocalTime = function setLocalTime(elem) {
 	  // Chromium-based browsers don't yet recognize HTMLTimeElement,
 	  // so `dateTime` is undefined, then use `getAttribute` instead.
@@ -67,7 +73,7 @@
 	  var date = new Date(time);
 
 	  var update = function update(date) {
-	    return elem.textContent = (0, _dateFormat.display)(date, _dateFormat.FORMAT.ELAPSED);
+	    return elem.textContent = (0, _dateFormat.display)(date, _dateFormat.FORMAT.ELAPSED, { shortDates: shortDates() });
 	  };
 
 	  var scheduleUpdateDays = function scheduleUpdateDays() {
@@ -271,6 +277,8 @@
 	};
 
 	var display = exports.display = function display(date, format) {
+	  var options = arguments.length <= 2 || arguments[2] === undefined ? { shortDates: false } : arguments[2];
+
 	  var verbose = format === FORMAT.ELAPSED;
 
 	  if (verbose) {
@@ -287,7 +295,13 @@
 
 	  var dateString = displayDate(date, format);
 
-	  return dateString + ' ' + hour + ':' + minute + ':' + seconds;
+	  dateString = dateString + ' ' + hour + ':' + minute;
+
+	  if (!options.shortDates) {
+	    dateString = dateString + ':' + seconds;
+	  }
+
+	  return dateString;
 	};
 
 /***/ },

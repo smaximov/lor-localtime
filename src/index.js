@@ -2,13 +2,19 @@ import { elapsed } from './date'
 import { display, FORMAT } from './date-format'
 import { after, schedule } from './schedule'
 
+const TABULAR_VIEW_RE = (/^\/(forum\/\w+|notifications|tracker)\/?$/)
+
+function shortDates() {
+  return TABULAR_VIEW_RE.test(window.location.pathname)
+}
+
 const setLocalTime = (elem) => {
   // Chromium-based browsers don't yet recognize HTMLTimeElement,
   // so `dateTime` is undefined, then use `getAttribute` instead.
   const time = elem.dateTime ? elem.dateTime : elem.getAttribute('datetime')
   const date = new Date(time)
 
-  const update = (date) => elem.textContent = display(date, FORMAT.ELAPSED)
+  const update = (date) => elem.textContent = display(date, FORMAT.ELAPSED, { shortDates: shortDates() })
 
   const scheduleUpdateDays = () =>
 	schedule(update, {stop: after({days: 2}), every: {hours: 1}}, date)

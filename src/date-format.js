@@ -46,7 +46,7 @@ export const displayMinutes = elapsedMinutes => {
   return `${elapsedMinutes} ${minutesString} назад`
 }
 
-export const display = (date, format) => {
+export const display = (date, format, options = { shortDates: false }) => {
   const verbose = format === FORMAT.ELAPSED
 
   if (verbose) {
@@ -61,7 +61,13 @@ export const display = (date, format) => {
   const minute = zeroPad(date.getMinutes(), 2)
   const seconds = zeroPad(date.getSeconds(), 2)
 
-  const dateString = displayDate(date, format)
+  let dateString = displayDate(date, format)
 
-  return `${dateString} ${hour}:${minute}:${seconds}`
+  dateString = `${dateString} ${hour}:${minute}`
+
+  if (!options.shortDates) {
+    dateString = `${dateString}:${seconds}`
+  }
+
+  return dateString
 }
